@@ -1,0 +1,19 @@
+{
+  "name": "hollywood-diversity",
+  "version": "1.0.0",
+  "description": "a React webapp that displays different visualization illustrating diversity problem in Hollywood",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Test\" && exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomaslam/hollywood-diversity-dataviz.git"
+  },
+  "author": "Thomas Lam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thomaslam/hollywood-diversity-dataviz/issues"
+  },
+  "homepage": "https://github.com/thomaslam/hollywood-diversity-dataviz#readme"
+}
