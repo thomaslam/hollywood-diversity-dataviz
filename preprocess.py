@@ -1,10 +1,16 @@
 import pandas as pd
 import re
+from sexmachine import detector
+from ethnicolr import pred_census_ln
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
 df = pd.read_csv('./datasets/movie_metadata.csv')
 nndb_base_link = "https://search.nndb.com/search/nndb.cgi?query="
+gender_detector = detector.Detector()
+
+gender_table = {"male": "Male", "female": "Female", "mostly_male": "Male", "mostly_female": "Female", "andy": "Androgynous"}
+race_table = {"api": "Asian", "black": "Black", "hispanic": "Hispanic", "white": "White"}
 
 def findActorInfo(tr):
     actor_name = tr.select('td')[1].get_text(strip=True)
@@ -28,10 +34,15 @@ def findActorInfo(tr):
         bio_para = bio_main.select("td > p")[0].select("p > p")[0]
         gender = str(bio_para.select("b")[0].next_sibling).strip()
         race = str(bio_para.select("b")[1].next_sibling).strip()
-        # print(bio_para.text.strip())
     else:
         # If NNDB bio page not found then use SexMachine or ethnicolr module to guess gender/race
-        pass
+        gender_guessed = gender_detector.get_gender(actor_name)
+        gender = gender_table[gender_guessed]
+
+        last_name = " ".join(actor_name.split(" ")[1:])
+        last_name_df = pd.DataFrame([{'name':last_name}])
+        race_guessed = pred_census_ln(last_name_df,'name')["race"][0]
+        race = race_table[race_guessed]
 
     return (gender, race)
 
