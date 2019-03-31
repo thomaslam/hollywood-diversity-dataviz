@@ -5,6 +5,38 @@ from bs4 import BeautifulSoup
 
 df = pd.read_csv('./datasets/movie_metadata.csv')
 nndb_base_link = "https://search.nndb.com/search/nndb.cgi?query="
+
+def findActorInfo(tr):
+    actor_name = tr.select('td')[1].get_text(strip=True)
+    actor_query = re.sub(" ", "+", actor_name)
+    search_page = urlopen(nndb_base_link + actor_query)
+    search_soup = BeautifulSoup(search_page, "html.parser")
+
+    first_entry = search_soup.select("font > p > table > tr")[1]
+    entry_name = first_entry.select("td")[0]
+    entry_link = entry_name.select("a")[0].get("href")
+    entry_name_text = entry_name.text.strip()
+    entry_occupation = first_entry.select("td")[1].text.strip()
+
+    gender = "Male"
+    race = "White"
+    if entry_name_text == actor_name and entry_occupation == "Actor":
+        # Scrape bio page
+        bio_page = urlopen(entry_link)
+        bio_soup = BeautifulSoup(bio_page, "html.parser")
+        bio_main = bio_soup.find_all("td", {"bgcolor": "F0F0F0"})[0]
+        bio_para = bio_main.select("td > p")[0].select("p > p")[0]
+        gender = str(bio_para.select("b")[0].next_sibling).strip()
+        race = str(bio_para.select("b")[1].next_sibling).strip()
+        # print(bio_para.text.strip())
+    else:
+        # If NNDB bio page not found then use SexMachine or ethnicolr module to guess gender/race
+        pass
+
+    return (gender, race)
+
+
+
 i = 0
 for idx, row in df.iterrows():
     if i == 1:
@@ -21,24 +53,17 @@ for idx, row in df.iterrows():
     credits_page = urlopen(credits_link)
     credits_soup = BeautifulSoup(credits_page, "html.parser")
 
+    # For each actor search for entry on NNDB
     j = 0
     for tr in credits_soup.find_all("tr", {"class": "odd"}):
         if j == 1:
             break
         j += 1
-
-        # Find actor name and search for entry on NNDB
-        actor = tr.select('td')[1].get_text(strip=True)
-        actor = re.sub(" ", "+", actor)
-        search_page = urlopen(nndb_base_link + actor)
-        search_soup = BeautifulSoup(search_page, "html.parser")
-
-        first_entry = search_soup.select("font > p > table > tr")[1]
-        print(first_entry.prettify())
+        (gender, race) = findActorInfo(tr)
         
 
     # for tr in credits_soup.find_all("tr", {"class": "even"}):
-        # actor = tr.select('td')[1].get_text(strip=True)
+        # findActorInfo(tr)
 
 
         
