@@ -5,7 +5,8 @@
     - [x] Check first entry in results page in NNDB page if it contains correct name and occupation matches actor/actress
     - [x] Use SexMachine and ethnicolr module
     * **NOTE**: How to run faster? Parallelize code using AWS?
-  - [ ] Expand original movie_metadata dataset with cast and crew variables with their race/ethnicity/gender info
+  - [x] Expand original movie_metadata dataset with cast and crew variables with their race/ethnicity/gender info
+  - [ ] Run on dataset and make sure it works as intended
 - [x] Set up single-page UI template (React? Bootstrap?)
 - [ ] Create visualizations from datasets generated from preprocessing step
   - [ ] Line chart for displaying trend in percentage of actor/actress leads being persons of color (POC)
