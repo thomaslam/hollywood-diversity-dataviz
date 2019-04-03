@@ -12,5 +12,5 @@
   - [ ] 
 
 # Notes
-* [Kaggle dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset) and other datasets created from scraping are downloaded to `datasets` folder which is at the source folder. These are not tracked by git
+* [Kaggle dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset) and cast database created from scraping located at `data` folder which is at the source folder. These are not tracked by git
 * SexMachine module breaks when using python v3.x.x. See [this](https://github.com/ferhatelmas/sexmachine/issues/6) for porting details. Circumvented this problem by downloading manually and fixing as per Github issue.
