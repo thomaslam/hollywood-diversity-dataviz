@@ -5,7 +5,6 @@ from ethnicolr import pred_census_ln
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-df = pd.read_csv('./data/movie_metadata.csv')
 nndb_base_link = "https://search.nndb.com/search/nndb.cgi?query="
 gender_detector = detector.Detector()
 
@@ -89,7 +88,7 @@ def findActorInfo(actor_name, db_conn):
 
     return (gender, race)
 
-def updateDF(row, gender, race):
+def updateDF(df, row, gender, race):
     gender_col_name = "num_males"
     if gender in gender_num_table.keys():
         gender_col_name = gender_num_table[gender]
@@ -119,6 +118,9 @@ def createCastsTable(db_file):
     return None
 
 def main():
+    df = pd.read_csv('./data/movie_metadata.csv')
+    output_csv_name = "./data/movie_merged.csv"
+
     db_file = "./data/casts.db"
     db_conn = createCastsTable(db_file)
     
@@ -152,7 +154,7 @@ def main():
             j += 1
             actor_name = tr.select('td')[1].get_text(strip=True)
             (gender, race) = findActorInfo(actor_name, db_conn)
-            updateDF(idx, gender, race)
+            updateDF(df, idx, gender, race)
             
         j = 0
         for tr in credits_soup.find_all("tr", {"class": "even"}):
@@ -161,7 +163,8 @@ def main():
             j += 1
             actor_name = tr.select('td')[1].get_text(strip=True)
             (gender, race) = findActorInfo(actor_name, db_conn)
-            updateDF(idx, gender, race)
+            updateDF(df, idx, gender, race)
+    df.to_csv(output_csv_name)
 
 
 if __name__ == "__main__":
