@@ -157,11 +157,11 @@ def main():
 
     # pylint: disable=no-member
     for idx, row in df.iterrows():
-        movie_title = row["movie_title"]
-        director_name = row["director_name"]
+        movie_title = str(row["movie_title"]).strip()
+        director_name = str(row["director_name"]).strip()
         print(movie_title + " - " + director_name)
 
-        if (path.exists("./data/movies/" + str(idx) + ".csv")):
+        if (path.exists("./data/movies/" + str(idx) + ".csv") or movie_title == "Miami Vice"):
             print("\tAlready processed. Skipping...")
             continue
         row_df = df.loc[idx,:].to_frame().T
@@ -180,28 +180,32 @@ def main():
             # if j == 3:
             #     break
             # j += 1
-            actor_name = tr.select('td')[1].get_text(strip=True)
-            actor_name = actor_name.replace("'", "")
-            actor_name = str(actor_name.encode("utf-8"))
-            name_len = len(actor_name)
-            actor_name = actor_name[2:name_len-1]
-            print("\t" + actor_name)
-            (gender, race) = findActorInfo(actor_name, db_conn)
-            updateDF(row_df, idx, gender, race)
+            actor_el = tr.select('td')
+            if len(actor_el > 1):
+                actor_name = actor_el[1].get_text(strip=True)
+                actor_name = actor_name.replace("'", "")
+                actor_name = str(actor_name.encode("utf-8"))
+                name_len = len(actor_name)
+                actor_name = actor_name[2:name_len-1]
+                print("\t" + actor_name)
+                (gender, race) = findActorInfo(actor_name, db_conn)
+                updateDF(row_df, idx, gender, race)
             
         j = 0
         for tr in credits_soup.find_all("tr", {"class": "even"}):
             # if j == 1:
             #     break
             # j += 1
-            actor_name = tr.select('td')[1].get_text(strip=True)
-            actor_name = actor_name.replace("'","")
-            actor_name = str(actor_name.encode("utf-8"))
-            name_len = len(actor_name)
-            actor_name = actor_name[2:name_len-1]
-            print("\t" + actor_name)
-            (gender, race) = findActorInfo(actor_name, db_conn)
-            updateDF(row_df, idx, gender, race)
+            actor_el = tr.select('td')
+            if (len(actor_el) > 1):
+                actor_name = actor_el[1].get_text(strip=True)
+                actor_name = actor_name.replace("'","")
+                actor_name = str(actor_name.encode("utf-8"))
+                name_len = len(actor_name)
+                actor_name = actor_name[2:name_len-1]
+                print("\t" + actor_name)
+                (gender, race) = findActorInfo(actor_name, db_conn)
+                updateDF(row_df, idx, gender, race)
         row_df.to_csv("./data/movies/" + str(idx) + ".csv")
 
     # Merge all ./data/movies/*.csv files into one big csv file
