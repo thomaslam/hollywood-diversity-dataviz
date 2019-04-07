@@ -14,7 +14,6 @@
   - [ ] 
 
 # Notes
-* [Kaggle dataset](https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset) and cast database created from scraping located at `data` folder which is at the source folder. These are not tracked by git
 * SexMachine module breaks when using python v3.x.x. See [this](https://github.com/ferhatelmas/sexmachine/issues/6) for porting details. Circumvented this problem by downloading manually and fixing as per Github issue.
 * The HTML template downloaded from [here](https://startbootstrap.com/themes/sb-admin-2/) and modified to incorporate our d3 visualisations.
 * A python server needs to be started in the html folder on the terminal. Commands are:

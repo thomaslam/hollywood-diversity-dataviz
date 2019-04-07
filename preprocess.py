@@ -32,7 +32,8 @@ def guessActorInfo(actor_name):
     gender_guessed = gender_detector.get_gender(first_name)
     if gender_guessed == "andy":
         print("\t\tUsing getGenders utility")
-        gender_guessed = getGenders(first_name)[0][0]
+        # gender_guessed = getGenders(first_name)[0][0]
+        gender_guessed = "Male"
     
     if gender_guessed in gender_table.keys():
         gender = gender_table[gender_guessed]
@@ -78,6 +79,8 @@ def scrapeActorInfo(actor_name, db_conn):
         else:
             (gender, race) = guessActorInfo(actor_name)
 
+    gender = gender.replace("'", "")
+    race = race.replace("'", "")
     print("\t\t(" + gender + "," + race + ")")
     # Insert entry into casts.db
     db_cursor = db_conn.cursor()
@@ -161,7 +164,7 @@ def main():
         if (path.exists("./data/movies/" + str(idx) + ".csv")):
             print("\tAlready processed. Skipping...")
             continue
-        row_df = df.loc[idx,:].to_frame().T;
+        row_df = df.loc[idx,:].to_frame().T
 
         # Parse movie_imdb_link column to get credit link
         imdb_link = row["movie_imdb_link"].split("?")[0]
