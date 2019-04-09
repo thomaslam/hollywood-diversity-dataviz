@@ -181,7 +181,7 @@ def main():
             #     break
             # j += 1
             actor_el = tr.select('td')
-            if len(actor_el > 1):
+            if (len(actor_el) > 1):
                 actor_name = actor_el[1].get_text(strip=True)
                 actor_name = actor_name.replace("'", "")
                 actor_name = str(actor_name.encode("utf-8"))
