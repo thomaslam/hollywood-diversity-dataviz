@@ -143,7 +143,6 @@ def createCastsTable(db_file):
 
 def main():
     df = pd.read_csv('./data/movie_metadata.csv')
-    output_csv_name = "./data/movie_merged.csv"
 
     db_file = "./data/casts.db"
     db_conn = createCastsTable(db_file)
@@ -175,7 +174,6 @@ def main():
         credits_soup = BeautifulSoup(credits_page, "html.parser")
 
         # For each actor find gender/race info using findActorInfo function
-        j = 0
         for tr in credits_soup.find_all("tr", {"class": "odd"}):
             # if j == 3:
             #     break
@@ -190,12 +188,8 @@ def main():
                 print("\t" + actor_name)
                 (gender, race) = findActorInfo(actor_name, db_conn)
                 updateDF(row_df, idx, gender, race)
-            
-        j = 0
+
         for tr in credits_soup.find_all("tr", {"class": "even"}):
-            # if j == 1:
-            #     break
-            # j += 1
             actor_el = tr.select('td')
             if (len(actor_el) > 1):
                 actor_name = actor_el[1].get_text(strip=True)
@@ -207,8 +201,6 @@ def main():
                 (gender, race) = findActorInfo(actor_name, db_conn)
                 updateDF(row_df, idx, gender, race)
         row_df.to_csv("./data/movies/" + str(idx) + ".csv")
-
-    # Merge all ./data/movies/*.csv files into one big csv file
 
 
 if __name__ == "__main__":
