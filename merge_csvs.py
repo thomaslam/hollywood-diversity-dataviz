@@ -8,4 +8,4 @@ for filename in os.listdir(movies_dir):
     print(filename)
     merged_df = pd.concat([merged_df, movie_df], ignore_index=True)
 
-merged_df.to_csv("./data/movie_merged.csv")
+merged_df.to_csv("./data/movie_merged_full.csv")
