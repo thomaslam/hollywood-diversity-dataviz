@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Diversity Visualizations</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="http://d3js.org/d3.v5.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 600px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a><font color="white"><b>Diversity Visualizations</b></font></a></li>
+        <li><a href="index.html">Timeline</a></li>
+        <li><a href="genre.html">Genre</a></li>
+        <li class="active"><a href="directors.html">Directors</a></li>
+        <li><a href="budget.html">Budget</a></li>
+        <li><a href="ratings.html">Rating</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a><span></span>By Manan, Pavitra and Thomas </a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-10 text-left"> 
+            <b>Bar graph representing famous directors and their casting choices</br></b>
+            <svg id="chart" width="1050" height="500"></svg>
+            
+    </br>Choose Option: 
+            <select id="year"></select>
+            
+            <input type="checkbox" id="sort">   
+            Inorder
+            
+            <script>
+            
+            d3.csv("toggle_chart_3.csv").then(d => chart(d));
+            
+            // years = dataset/category
+            // month = num likes
+            
+            function chart(csv) {
+            
+                csv.forEach(function(d) {
+                    var dates = d.Date.split("-");
+                    d.year = dates[0]; d.month = dates[1];
+                    d.value = +d.value;
+                    return d;
+                })
+            
+                var months = [...new Set(csv.map(d => d.month))],
+                    years  = [...new Set(csv.map(d => d.year))];
+                
+                
+            
+            
+                var options = d3.select("#year").selectAll("option")
+                    .data(years)
+                .enter().append("option")
+                    .text(d => d)
+            
+                var svg = d3.select("#chart"),
+                    margin = {top: 25, bottom: 10, left: 25, right: 600},
+                    width = +svg.attr("width")+500,
+                    height = +svg.attr("height") - margin.top - margin.bottom;
+            
+                var x = d3.scaleBand()
+                    .range([margin.left, width - margin.right])
+                    .padding(0.1)
+                    .paddingOuter(0.2)
+                
+                var y = d3.scaleLinear()
+                    .range([height - margin.bottom, margin.top])
+            
+                var xAxis = g => g
+                    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+                    .call(d3.axisBottom(x).tickSizeOuter(0))
+            
+                var yAxis = g => g
+                    .attr("transform", "translate(" + margin.left + ",0)")
+                    .call(d3.axisLeft(y))
+            
+                svg.append("g")
+                    .attr("class", "x-axis")
+            
+                svg.append("g")
+                    .attr("class", "y-axis")
+            
+                update(d3.select("#year").property("value"), 0)
+            
+                function update(year, speed) {
+            
+                    var data = csv.filter(f => f.year == year)
+                
+                    y.domain([0, d3.max(data, d => d.value)]).nice()
+            
+                    svg.selectAll(".y-axis").transition().duration(speed)
+                        .call(yAxis);
+            
+                    data.sort(d3.select("#sort").property("checked")
+                        ? (a, b) => b.value - a.value
+                        : (a, b) => months.indexOf(a.month) - months.indexOf(b.month))
+            
+                    x.domain(data.map(d => d.month))
+            
+                    svg.selectAll(".x-axis").transition().duration(speed)
+                        .call(xAxis)
+            
+                    var bar = svg.selectAll(".bar")
+                        .data(data, d => d.month)
+            
+                    bar.exit().remove();
+            
+                    bar.enter().append("rect")
+                        .attr("class", "bar")
+                        .attr("fill", "steelblue")
+                        .attr("width", x.bandwidth())
+                        .attr("stroke", "rgb(0,0,0)")
+                        .attr("fill", "rgb(245,0,0)")
+                        .merge(bar)
+                    .transition().duration(speed)
+                        .attr("x", d => x(d.month))
+                        .attr("y", d => y(d.value))
+                        .attr("height", d => y(0) - y(d.value))
+                }
+            
+                chart.update = update;
+            }
+            
+            var select = d3.select("#year")
+                .style("border-radius", "5px")
+                .on("change", function() {
+                    chart.update(this.value, 750)
+                })
+            
+            var checkbox = d3.select("#sort")
+                .style("margin-left", "45%")
+                .on("click", function() {
+                    chart.update(select.property("value"), 750)
+                })
+            
+            </script>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

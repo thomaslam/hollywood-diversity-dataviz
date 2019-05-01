@@ -1,0 +1,154 @@
+{
+    "name": "genres",
+    "children": [
+
+        {
+            "name": "Drama",
+            "maleratio": 3.2358111513179075,
+            "femaleratio": 0.6389546395708663,
+            "whiteratio": 3.088446262732535,
+            "minorityratio": 0.7838133156002564
+        },
+        {
+            "name": "History",
+            "maleratio": 5.1154289139550055,
+            "femaleratio": 0.6604180004375941,
+            "whiteratio": 7.197556959259607,
+            "minorityratio": 0.8845722304586536
+        },
+        {
+            "name": "Thriller",
+            "maleratio": 3.460203398550992,
+            "femaleratio": 0.692549997874635,
+            "whiteratio": 2.8680421016454685,
+            "minorityratio": 0.8385721312636244
+        },
+        {
+            "name": "Adventure",
+            "maleratio": 3.7411188420863812,
+            "femaleratio": 0.8602727987911072,
+            "whiteratio": 7.10962554349316,
+            "minorityratio": 0.8168558122912797
+        },
+        {
+            "name": "Fantasy",
+            "maleratio": 3.4720374782852046,
+            "femaleratio": 0.928058413384022,
+            "whiteratio": 9.496223293085817,
+            "minorityratio": 0.8226168533462311
+        },
+        {
+            "name": "Action",
+            "maleratio": 3.472753284420039,
+            "femaleratio": 0.6990972787840664,
+            "whiteratio": 4.538657706733332,
+            "minorityratio": 0.7755103407698289
+        },
+        {
+            "name": "Sci-Fi",
+            "maleratio": 3.264547767983155,
+            "femaleratio": 0.8165661897471064,
+            "whiteratio": 3.5436813995181624,
+            "minorityratio": 0.8244113393577566
+        },
+        {
+            "name": "Comedy",
+            "maleratio": 2.8448424840715694,
+            "femaleratio": 0.8158741663736933,
+            "whiteratio": 7.184957687702487,
+            "minorityratio": 0.8048171490081758
+        },
+        {
+            "name": "Crime",
+            "maleratio": 2.4620485374086143,
+            "femaleratio": 0.5351673200472035,
+            "whiteratio": 3.22403350602651,
+            "minorityratio": 0.7016703936987427
+        },
+        {
+            "name": "Romance",
+            "maleratio": 1.9898734536432385,
+            "femaleratio": 0.5736685197524587,
+            "whiteratio": 3.9639664061033497,
+            "minorityratio": 0.8695547401016677
+        },
+        {
+            "name": "Mystery",
+            "maleratio": 3.278233526733555,
+            "femaleratio": 0.792616779496208,
+            "whiteratio": 5.855869835626859,
+            "minorityratio": 0.706484676690421
+        },
+        {
+            "name": "Animation",
+            "maleratio": 4.572716164646879,
+            "femaleratio": 1.3792317839156918,
+            "whiteratio": 15.822082385022043,
+            "minorityratio": 0.9329823760265784
+        },
+        {
+            "name": "Family",
+            "maleratio": 4.03010574333601,
+            "femaleratio": 1.1620001640793793,
+            "whiteratio": 12.805082099155529,
+            "minorityratio": 0.8842556740962049
+        },
+        {
+            "name": "War",
+            "maleratio": 6.3461572352718685,
+            "femaleratio": 0.6137715784650961,
+            "whiteratio": 6.813125523751282,
+            "minorityratio": 0.9545173923973792
+        },
+        {
+            "name": "Biography",
+            "maleratio": 2.0631966130743957,
+            "femaleratio": 0.3924006310823151,
+            "whiteratio": 0.6086554429454035,
+            "minorityratio": 0.4204001079479481
+        },
+        {
+            "name": "Horror",
+            "maleratio": 5.182464770480856,
+            "femaleratio": 1.239206742227188,
+            "whiteratio": 8.411082947690717,
+            "minorityratio": 0.810950019237314
+        },
+        {
+            "name": "Sport",
+            "maleratio": 2.36130015808012,
+            "femaleratio": 0.42907870816885724,
+            "whiteratio": 2.1760280961904077,
+            "minorityratio": 0.6671364896825422
+        },
+        {
+            "name": "Musical",
+            "maleratio": 2.107969663224013,
+            "femaleratio": 0.7501700972974672,
+            "whiteratio": 9.653792653194367,
+            "minorityratio": 0.617227832385392
+        },
+        {
+            "name": "Music",
+            "maleratio": 1.578646195690421,
+            "femaleratio": 0.5969188924963448,
+            "whiteratio": 0.17905375762935138,
+            "minorityratio": 0.6383125661669908
+        },
+        {
+            "name": "Western",
+            "maleratio": 4.864705555180266,
+            "femaleratio": 0.8746422947925587,
+            "whiteratio": 6.708129570077226,
+            "minorityratio": 0.7646625892922038
+        },
+        {
+            "name": "Documentary",
+            "maleratio": 6.951699128745174,
+            "femaleratio": 0.6047350128064589,
+            "whiteratio": 33.578400484690476,
+            "minorityratio": 3.646499459720024
+        }
+    ]
+
+}

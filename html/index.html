@@ -2,766 +2,430 @@
 <html lang="en">
 
 <head>
+    <title>Diversity Visualizations</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./d3.js"></script>
+    <style>
+        /* Remove the navbar's default margin-bottom and rounded borders */
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+        }
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <script type="text/javascript" src="./d3.js"></script>
-  <title>Diversity Visualisation in Hollywood</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
-  <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link
-    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-    rel="stylesheet">
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {
+            height: 6500px
+        }
 
-  <!-- Custom styles for this template-->
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+        /* Set gray background color and 100% height */
+        .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 100%;
+        }
 
+        /* Set black background color, white text and some padding */
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+
+            .row.content {
+                height: auto;
+            }
+        }
+    </style>
 </head>
 
-<body id="page-top">
+<body>
 
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-
-        <div class="sidebar-brand-text mx-3">Diversity Visualisation in Hollywood </div>
-      </a>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
-
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-      </li>
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Addons
-      </div>
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item">
-        <a class="nav-link" href="charts-new.html">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
-      </li>
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="tables-new.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Tables</span></a>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-      <!-- Main Content -->
-      <div id="content">
-
-        <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-
-          <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-
-            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-            <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
-              <!-- Dropdown - Messages -->
-              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                aria-labelledby="searchDropdown">
-                <form class="form-inline mr-auto w-100 navbar-search">
-                  <div class="input-group">
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                      aria-label="Search" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                      <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </li>
-
-            <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Thomas, Pavitra, Manan</span>
-                <img class="img-profile rounded-circle"
-                  src="http://icons.iconarchive.com/icons/blackvariant/button-ui-system-folders-alt/512/Group-icon.png">
-              </a>
-            </li>
-
-          </ul>
-
-        </nav>
-        <!-- End of Topbar -->
-
-        <!-- Begin Page Content -->
+    <nav class="navbar navbar-inverse">
         <div class="container-fluid">
-
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-          </div>
-
-          <!-- Content Row -->
-          <div class="row">
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
             </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a>
+                            <font color="white"><b>Diversity Visualizations</b></font>
+                        </a></li>
+                    <li class="active"><a href="index.html">Timeline</a></li>
+                    <li><a href="genre.html">Genre</a></li>
+                    <li><a href="directors.html">Directors</a></li>
+                    <li><a href="budget.html">Budget</a></li>
+                    <li><a href="ratings.html">Rating</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a><span></span>By Manan, Pavitra and Thomas </a></li>
+                </ul>
             </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
-                      <div class="row no-gutters align-items-center">
-                        <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                        </div>
-                        <div class="col">
-                          <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50"
-                              aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Pending Requests Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-comments fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Content Row -->
-
-          <div class="row">
-
-            <!-- Area Chart -->
-            <div class="col-xl-8 col-lg-7">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Gender Diversity Overview</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                  </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  <div class="chart-area" id="graph1">
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Pie Chart -->
-            <div class="col-xl-4 col-lg-5">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                  <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                      aria-haspopup="true" aria-expanded="false">
-                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                      aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Dropdown Header:</div>
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                  </div>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                  <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
-                  </div>
-                  <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Content Row -->
-          <div class="row">
-
-            <!-- Content Column -->
-            <div class="col-lg-6 mb-4">
-
-              <!-- Project Card Example -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-                </div>
-                <div class="card-body">
-                  <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20"
-                      aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40"
-                      aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0"
-                      aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80"
-                      aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100"
-                      aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Color System -->
-              <div class="row">
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-primary text-white shadow">
-                    <div class="card-body">
-                      Primary
-                      <div class="text-white-50 small">#4e73df</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-success text-white shadow">
-                    <div class="card-body">
-                      Success
-                      <div class="text-white-50 small">#1cc88a</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-info text-white shadow">
-                    <div class="card-body">
-                      Info
-                      <div class="text-white-50 small">#36b9cc</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-warning text-white shadow">
-                    <div class="card-body">
-                      Warning
-                      <div class="text-white-50 small">#f6c23e</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-danger text-white shadow">
-                    <div class="card-body">
-                      Danger
-                      <div class="text-white-50 small">#e74a3b</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                  <div class="card bg-secondary text-white shadow">
-                    <div class="card-body">
-                      Secondary
-                      <div class="text-white-50 small">#858796</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="col-lg-6 mb-4">
-
-              <!-- Illustrations -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                </div>
-                <div class="card-body">
-                  <div class="text-center">
-                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                      src="img/undraw_posting_photo.svg" alt="">
-                  </div>
-                  <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow"
-                      href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that
-                    you can use completely free and without attribution!</p>
-                  <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
-                </div>
-              </div>
-
-              <!-- Approach -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                </div>
-                <div class="card-body">
-                  <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor
-                    page performance. Custom CSS classes are used to create custom components and custom utility
-                    classes.</p>
-                  <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap
-                    framework, especially the utility classes.</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
         </div>
-        <!-- /.container-fluid -->
+    </nav>
 
-      </div>
-      <!-- End of Main Content -->
+    <div class="container-fluid text-center">
+        <div class="row content">
+            <div class="col-sm-2 sidenav">
+                <select id="options" value="race">
+                    <option value="none">-Select an option-</option>
+                    <option value="race">Race</option>
+                    <option value="gender">Gender</option>
+                </select>
 
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2019</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
+            </div>
+            <script>
+                d3.select("#options").on("change", drawVisulization);
+                var svg, option;
 
-    </div>
-    <!-- End of Content Wrapper -->
+                function drawVisulization() {
+                    var margin = {
+                            top: 20,
+                            right: 100,
+                            bottom: 30,
+                            left: 50
+                        },
+                        width = 545 - margin.left - margin.right,
+                        height = 320 - margin.top - margin.bottom;
+                    width = document.getElementById('linecharts').clientWidth - margin.left - margin.right;
+                    height = 600 - margin.top - margin.bottom;
+                    d3.select("svg").remove();
+                    svg = d3.selectAll("#linecharts").append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    option = document.getElementById("options").value;
+                    console.log(option);
+                    var parseDate = d3.timeParse("%Y");
 
-  </div>
-  <!-- End of Page Wrapper -->
+                    var x = d3.scaleTime()
+                        .range([0, width]);
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
+                    var y = d3.scaleLinear()
+                        .range([height, 0]);
 
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
-        </div>
-      </div>
-    </div>
-  </div>
+                    var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-  <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                    var xAxis = d3.axisBottom()
+                        .scale(x);
 
-  <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
-
-  <script>
-    $(function(){
-    //Width and height
-      var margin = {
-          top: 20,
-          right: 80,
-          bottom: 30,
-          left: 50
-        },
-        width = 545 - margin.left - margin.right,
-        height = 320 - margin.top - margin.bottom;
-
-      var parseDate = d3.timeParse("%Y");
-
-      var x = d3.scaleTime()
-        .range([0, width]);
-
-      var y = d3.scaleLinear()
-        .range([height, 0]);
-
-      var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-      var xAxis = d3.axisBottom()
-        .scale(x)
-        .ticks(5);
-      var yAxis = d3.axisLeft()
-        .scale(y)
-        .ticks(5);
-
-      var line = d3.line()
-        .x(function (d) {
-          return x(d.date);
-        })
-        .y(function (d) {
-          return y(d.ratio);
-        });
-      var svg = d3.select("#graph1").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      var data = d3.csv("./movie_merged.csv", function (d) {
-        return {
-          year: d['title_year'],
-          male: d['num_males'],
-          female: d['num_females']
-        }
-      }, function (err, data) {
-        if (err) throw err;
-        console.log(data);
-        data = d3.nest().
-        key(function (d) {
-          return d.year;
-        }).rollup(function (v) {
-          return {
-            males: d3.sum(v, function (d) {
-              return d.male;
-            }),
-            females: d3.sum(v, function (d) {
-              return d.female;
-            })
-          }
-        }).entries(data);
-        data = data.map(element => {
-          if (element.key && element.key.length) return {
-            date: element.key,
-            Males: element.value.males / (element.value.males + element.value.females) * 100,
-            Females: element.value.females / (element.value.males + element.value.females) *
-              100
-          }
-        });
-        data = data.filter(element => element != null);
-        data.sort(function (a, b) {
-          return a.date - b.date
-        })
-        data.forEach((d) => {
-          d.date = parseDate(Math.round(d.date))
-        });
-        console.log(data);
-        color.domain(["Males", "Females"]);
+                    var yAxis = d3.axisLeft()
+                        .scale(y)
 
 
-        var genders = color.domain().map(function (name) {
-          return {
-            name: name,
-            values: data.map(function (d) {
-              return {
-                date: d.date,
-                ratio: +d[name]
-              };
-            })
-          };
-        });
+                    var line = d3.line()
+                        .x(function (d) {
+                            return x(d.date);
+                        })
+                        .y(function (d) {
+                            return y(d.ratio);
+                        });
 
-        x.domain(d3.extent(data, function (d) {
-          return d.date;
-        }));
+                    var data = d3.csv("./movie_merged.csv", function (d) {
+                        return {
+                            year: d['title_year'],
+                            male: d['num_males'],
+                            female: d['num_females'],
+                            asians: d['num_asians'],
+                            blacks: d['num_blacks'],
+                            hispanics: d['num_hispanics'],
+                            whites: d['num_whites']
+                        }
+                    }, function (err, data) {
+                        if (err) throw err;
+                        console.log(data);
+                        data = d3.nest().
+                        key(function (d) {
+                            return d.year;
+                        }).rollup(function (v) {
+                            return {
+                                males: d3.sum(v, function (d) {
+                                    return d.male;
+                                }),
+                                females: d3.sum(v, function (d) {
+                                    return d.female;
+                                }),
+                                asians: d3.sum(v, function (d) {
+                                    return d.asians;
+                                }),
+                                blacks: d3.sum(v, function (d) {
+                                    return d.blacks;
+                                }),
+                                hispanics: d3.sum(v, function (d) {
+                                    return d.hispanics;
+                                }),
+                                whites: d3.sum(v, function (d) {
+                                    return d.whites;
+                                })
+                            }
+                        }).entries(data);
+                        data = data.map(element => {
+                            if (element.key && element.key.length) return {
+                                date: element.key,
+                                Males: element.value.males / (element.value.males + element.value
+                                    .females) * 100,
+                                Females: element.value.females / (element.value.males + element
+                                        .value.females) *
+                                    100,
 
-        y.domain([
-          d3.min(genders, function (c) {
-            return d3.min(c.values, function (v) {
-              return v.ratio;
-            });
-          }),
-          d3.max(genders, function (c) {
-            return d3.max(c.values, function (v) {
-              return v.ratio;
-            });
-          })
-        ]);
+                                Blacks: element.value.blacks / (element.value.blacks +
+                                    element.value.whites +
+                                    element.value.hispanics +
+                                    element.value.asians) * 100,
+                                Asians: element.value.asians / (element.value.blacks +
+                                    element.value.whites +
+                                    element.value.hispanics +
+                                    element.value.asians) * 100,
+                                Hispanics: element.value.hispanics / (element.value.blacks +
+                                    element.value.whites +
+                                    element.value.hispanics +
+                                    element.value.asians) * 100,
+                                Whites: element.value.whites / (element.value.blacks +
+                                        element.value.whites +
+                                        element.value.hispanics +
+                                        element.value.asians) *
+                                    100,
+                            }
+                        });
+                        data = data.filter(element => element != null);
+                        data.sort(function (a, b) {
+                            return a.date - b.date
+                        })
+                        let dates = [];
+                        data.forEach((d) => {
+                            d.date = parseDate(Math.round(d.date))
+                            dates.push(d.date)
+                        });
 
-        var legend = svg.selectAll('g')
-          .data(genders)
-          .enter()
-          .append('g')
-          .attr('class', 'legend');
+                        if (option == 'gender') color.domain(["Males", "Females"]);
+                        else color.domain(["Asians", "Whites", "Hispanics", "Blacks"]);
 
-        legend.append('rect')
-          .attr('x', width - 20)
-          .attr('y', function (d, i) {
-            return i * 20;
-          })
-          .attr('width', 10)
-          .attr('height', 10)
-          .style('fill', function (d) {
-            return color(d.name);
-          });
+                        var genders = color.domain().map(function (name) {
+                            return {
+                                name: name,
+                                values: data.map(function (d) {
+                                    return {
+                                        date: d.date,
+                                        ratio: +d[name]
+                                    };
+                                })
+                            };
+                        });
 
-        legend.append('text')
-          .attr('x', width - 8)
-          .attr('y', function (d, i) {
-            return (i * 20) + 9;
-          })
-          .text(function (d) {
-            return d.name;
-          });
+                        x.domain(d3.extent(data, function (d) {
+                            return d.date;
+                        }));
 
-        svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis)
-          .append("text")
-          .attr("x", width-50)
-          .attr("y", 100)
-          .style("text-anchor", "end")
-          .attr("text", "Timeline")
-          .attr("fill","black");
-          
-        svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis)
-          .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", -10)
-          .attr("dy", ".1em")
-          .style("text-anchor", "end")
-          .text("Ratios")
-          .attr("fill","black");;
+                        y.domain([
+                            d3.min(genders, function (c) {
+                                return d3.min(c.values, function (v) {
+                                    return v.ratio;
+                                });
+                            }),
+                            d3.max(genders, function (c) {
+                                return d3.max(c.values, function (v) {
+                                    return v.ratio;
+                                });
+                            })
+                        ]);
 
-        var city = svg.selectAll(".city")
-          .data(genders)
-          .enter().append("g")
-          .attr("class", "city");
+                        var legend = svg.selectAll('g')
+                            .data(genders)
+                            .enter()
+                            .append('g')
+                            .attr('class', 'legend');
 
-        city.append("path")
-          .attr("class", "line")
-          .attr("d", function (d) {
-            return line(d.values);
-          })
-          .style("stroke", function (d) {
-            return color(d.name);
-          }).attr("fill","none");
+                        legend.append('rect')
+                            .attr('x', width + 10)
+                            .attr('y', function (d, i) {
+                                return i * 20;
+                            })
+                            .attr('width', 10)
+                            .attr('height', 10)
+                            .style('fill', function (d) {
+                                return color(d.name);
+                            });
 
-        city.append("text")
-          .datum(function (d) {
-            return {
-              name: d.name,
-              value: d.values[d.values.length - 1]
-            };
-          })
-          .attr("transform", function (d) {
-            return "translate(" + x(d.value.date) + "," + y(d.value.ratio) + ")";
-          })
-          .attr("x", 3)
-          .attr("dy", ".35em")
-          .text(function (d) {
-            return d.name;
-          });
+                        legend.append('text')
+                            .attr('x', width + 22)
+                            .attr('y', function (d, i) {
+                                return (i * 20) + 9;
+                            })
+                            .text(function (d) {
+                                return d.name;
+                            });
 
-        var mouseG = svg.append("g")
-          .attr("class", "mouse-over-effects");
+                        svg.append("g")
+                            .attr("class", "x axis")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(xAxis)
+                            .append("text")
+                            .attr("x", width - 50)
+                            .attr("y", 100)
+                            .style("text-anchor", "start")
+                            .attr("text", "Timeline")
+                            .attr("fill", "black")
+                            .attr("transform", "rotate(90)");
 
-        mouseG.append("path") // this is the black vertical line to follow mouse
-          .attr("class", "mouse-line")
-          .style("stroke", "black")
-          .style("stroke-width", "1px")
-          .style("opacity", "0");
+                        svg.append("g")
+                            .attr("class", "y axis")
+                            .call(yAxis)
+                            .append("text")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", -10)
+                            .attr("dy", ".1em")
+                            .style("text-anchor", "end")
+                            .text("Ratios")
+                            .attr("fill", "black");;
 
-        var lines = document.getElementsByClassName('line');
+                        var city = svg.selectAll(".city")
+                            .data(genders)
+                            .enter().append("g")
+                            .attr("class", "city");
 
-        var mousePerLine = mouseG.selectAll('.mouse-per-line')
-          .data(genders)
-          .enter()
-          .append("g")
-          .attr("class", "mouse-per-line");
+                        city.append("path")
+                            .attr("class", "line")
+                            .attr("d", function (d) {
+                                return line(d.values);
+                            })
+                            .style("stroke", function (d) {
+                                return color(d.name);
+                            }).attr("fill", "none").transition().duration(1000);
 
-        mousePerLine.append("circle")
-          .attr("r", 7)
-          .style("stroke", function (d) {
-            return color(d.name);
-          })
-          .style("fill", "none")
-          .style("stroke-width", "1px")
-          .style("opacity", "0");
+                        city.append("text")
+                            .datum(function (d) {
+                                return {
+                                    name: d.name,
+                                    value: d.values[d.values.length - 1]
+                                };
+                            })
+                            .attr("transform", function (d) {
+                                return "translate(" + x(d.value.date) + "," + y(d.value.ratio) + ")";
+                            })
+                            .attr("x", 3)
+                            .attr("dy", ".35em").transition().duration(1000);
+                        // .text(function (d) {
+                        //     return d.name;
+                        // });
 
-        mousePerLine.append("text")
-          .attr("transform", "translate(10,3)");
+                        var mouseG = svg.append("g")
+                            .attr("class", "mouse-over-effects");
 
-        mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
-          .attr('width', width) // can't catch mouse events on a g element
-          .attr('height', height)
-          .attr('fill', 'none')
-          .attr('pointer-events', 'all')
-          .on('mouseout', function () { // on mouse out hide line, circles and text
-            d3.select(".mouse-line")
-              .style("opacity", "0");
-            d3.selectAll(".mouse-per-line circle")
-              .style("opacity", "0");
-            d3.selectAll(".mouse-per-line text")
-              .style("opacity", "0");
-          })
-          .on('mouseover', function () { // on mouse in show line, circles and text
-            d3.select(".mouse-line")
-              .style("opacity", "1");
-            d3.selectAll(".mouse-per-line circle")
-              .style("opacity", "1");
-            d3.selectAll(".mouse-per-line text")
-              .style("opacity", "1");
-          })
-          .on('mousemove', function () { // mouse moving over canvas
-            var mouse = d3.mouse(this);
-            d3.select(".mouse-line")
-              .attr("d", function () {
-                var d = "M" + mouse[0] + "," + height;
-                d += " " + mouse[0] + "," + 0;
-                return d;
-              });
+                        mouseG.append("path") // this is the black vertical line to follow mouse
+                            .attr("class", "mouse-line")
+                            .style("stroke", "black")
+                            .style("stroke-width", "1px")
+                            .style("opacity", "0");
 
-            d3.selectAll(".mouse-per-line")
-              .attr("transform", function (d, i) {
-                console.log(width / mouse[0])
-                var xDate = x.invert(mouse[0]),
-                  bisect = d3.bisector(function (d) {
-                    return d.date;
-                  }).right;
-                idx = bisect(d.values, xDate);
+                        var lines = document.getElementsByClassName('line');
 
-                var beginning = 0,
-                  end = lines[i].getTotalLength(),
-                  target = null;
+                        var mousePerLine = mouseG.selectAll('.mouse-per-line')
+                            .data(genders)
+                            .enter()
+                            .append("g")
+                            .attr("class", "mouse-per-line");
 
-                while (true) {
-                  target = Math.floor((beginning + end) / 2);
-                  pos = lines[i].getPointAtLength(target);
-                  if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-                    break;
-                  }
-                  if (pos.x > mouse[0]) end = target;
-                  else if (pos.x < mouse[0]) beginning = target;
-                  else break; //position found
+                        mousePerLine.append("circle")
+                            .attr("r", 7)
+                            .style("stroke", function (d) {
+                                return color(d.name);
+                            })
+                            .style("fill", "none")
+                            .style("stroke-width", "1px")
+                            .style("opacity", "0");
+
+                        mousePerLine.append("text")
+                            .attr("transform", "translate(10,3)");
+
+                        mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+                            .attr('width', width) // can't catch mouse events on a g element
+                            .attr('height', height)
+                            .attr('fill', 'none')
+                            .attr('pointer-events', 'all')
+                            .on('mouseout', function () { // on mouse out hide line, circles and text
+                                d3.select(".mouse-line")
+                                    .style("opacity", "0");
+                                d3.selectAll(".mouse-per-line circle")
+                                    .style("opacity", "0");
+                                d3.selectAll(".mouse-per-line text")
+                                    .style("opacity", "0");
+                            })
+                            .on('mouseover', function () { // on mouse in show line, circles and text
+                                d3.select(".mouse-line")
+                                    .style("opacity", "1");
+                                d3.selectAll(".mouse-per-line circle")
+                                    .style("opacity", "1");
+                                d3.selectAll(".mouse-per-line text")
+                                    .style("opacity", "1");
+                            })
+                            .on('mousemove', function () { // mouse moving over canvas
+                                var mouse = d3.mouse(this);
+                                d3.select(".mouse-line")
+                                    .attr("d", function () {
+                                        var d = "M" + mouse[0] + "," + height;
+                                        d += " " + mouse[0] + "," + 0;
+                                        return d;
+                                    });
+
+                                d3.selectAll(".mouse-per-line")
+                                    .attr("transform", function (d, i) {
+                                        console.log(width / mouse[0])
+                                        var xDate = x.invert(mouse[0]),
+                                            bisect = d3.bisector(function (d) {
+                                                return d.date;
+                                            }).right;
+                                        idx = bisect(d.values, xDate);
+
+                                        var beginning = 0,
+                                            end = lines[i].getTotalLength(),
+                                            target = null;
+
+                                        while (true) {
+                                            target = Math.floor((beginning + end) / 2);
+                                            pos = lines[i].getPointAtLength(target);
+                                            if ((target === end || target === beginning) && pos.x !==
+                                                mouse[0]) {
+                                                break;
+                                            }
+                                            if (pos.x > mouse[0]) end = target;
+                                            else if (pos.x < mouse[0]) beginning = target;
+                                            else break; //position found
+                                        }
+
+                                        d3.select(this).select('text')
+                                            .text(y.invert(pos.y).toFixed(2));
+
+                                        return "translate(" + mouse[0] + "," + pos.y + ")";
+                                    });
+                            });
+                    });
                 }
+            </script>
+            <div class="col-sm-8 text-left" id="linecharts">
+            </div>
+            <div class="col-sm-2 sidenav">
+            </div>
+        </div>
+    </div>
+    <footer class="container-fluid text-center">
+        <p></p>
+    </footer>
 
-                d3.select(this).select('text')
-                  .text(y.invert(pos.y).toFixed(2));
-
-                return "translate(" + mouse[0] + "," + pos.y + ")";
-              });
-          });
-     });
-    });
-
-  </script>
 </body>
 
 </html>

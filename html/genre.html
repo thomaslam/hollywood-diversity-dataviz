@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Diversity Visualizations</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./d3.js"></script>
+    <style>
+        /* Remove the navbar's default margin-bottom and rounded borders */
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {
+            height: 600px
+        }
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* Set black background color, white text and some padding */
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+
+            .row.content {
+                height: auto;
+            }
+        }
+        form {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .node {
+            border: solid 1px white;
+            font: 10px sans-serif;
+            line-height: 12px;
+            overflow: hidden;
+            position: absolute;
+            text-indent: 2px;
+        }
+
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin: 0;
+            font-family: Futura;
+            font-size: 16px;
+            line-height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a>
+                            <font color="white"><b>Diversity Visualizations</b></font>
+                        </a></li>
+                    <li><a href="index.html">Timeline</a></li>
+                    <li class="active"><a href="genre.html">Genre</a></li>
+                    <li><a href="directors.html">Directors</a></li>
+                    <li><a href="budget.html">Budget</a></li>
+                    <li><a href="ratings.html">Rating</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a><span></span>By Manan, Pavitra and Thomas </a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid text-left">
+        <div class="row content" id="treemap">
+            <script src="//d3js.org/d3.v4.min.js"></script>
+            <script>
+                'use strict';
+
+                const margin = {
+                        top: 40,
+                        right: 10,
+                        bottom: 10,
+                        left: 10
+                    },
+                    width = 960 - margin.left - margin.right,
+                    height = 500 - margin.top - margin.bottom,
+                    color = d3.scaleOrdinal().range(d3.schemeCategory20);
+
+                const treemap = d3.treemap().size([width, height]);
+
+                const div = d3.select("#treemap").append("div")
+                    .style("position", "relative")
+                    .style("width", (width + margin.left + margin.right) + "px")
+                    .style("height", (height + margin.top + margin.bottom) + "px")
+                    .style("left", margin.left + "px")
+                    .style("top", margin.top + "px");
+
+                d3.json("genre.json", function (error, data) {
+                    if (error) throw error;
+
+                    const root = d3.hierarchy(data, (d) => d.children)
+                        .sum((d) => d.maleratio);
+                    console.log(root);
+                    const tree = treemap(root);
+
+                    const node = div.datum(root).selectAll(".node")
+                        .data(tree.leaves())
+                        .enter().append("div")
+                        .attr("class", "node")
+                        .style("left", (d) => d.x0 + "px")
+                        .style("top", (d) => d.y0 + "px")
+                        .style("width", (d) => Math.max(0, d.x1 - d.x0 - 1) + "px")
+                        .style("height", (d) => Math.max(0, d.y1 - d.y0 - 1) + "px")
+                        .style("background", (d) => color(d.data.name))
+                        .text((d) => d.data.name)
+                        .on("mouseover", function (d) {
+
+                            const div2 = d3.select("body").append("div")
+                                .style("position", "absolute")
+                                .style("width", (width + margin.left + margin.right) + "px")
+                                .style("height", "40px")
+                                .style("left", margin.left + "px")
+                                .style("top", margin.top + "px");
+                            var xPosition = d.x0;
+                            var yPosition = d.y0;
+
+                            let category = document.querySelector('input[name="mode"]:checked').value;
+                            category = category + "ratio";
+                            console.log(category);
+                            d3.select("#tooltip")
+                                .style("left", xPosition + "px")
+                                .style("top", yPosition + "px")
+                                .select("#value")
+                                .text(d.data.name + " " + parseFloat(d.data[category]).toFixed(2));
+
+
+                            d3.select("#tooltip").classed("hidden", false);
+
+                        })
+                        .on("mouseout", function () {
+
+
+                            d3.select("#tooltip").classed("hidden", true);
+
+                        });
+
+                    d3.selectAll("input").on("change", function change() {
+                        const category = (this.value == "male") ? 'maleratio' : (this.value ==
+                                "female") ?
+                            'femaleratio' : (this.value == "white") ? 'whiteratio' : 'minorityratio';
+                        const value = (d) => {
+                            return d[category]
+                        };
+                        const newRoot = d3.hierarchy(data, (d) => d.children)
+                            .sum(value);
+
+                        node.data(treemap(newRoot).leaves())
+                            .transition()
+                            .duration(1500)
+                            .style("left", (d) => d.x0 + "px")
+                            .style("top", (d) => d.y0 + "px")
+                            .style("width", (d) => Math.max(0, d.x1 - d.x0 - 1) + "px")
+                            .style("height", (d) => Math.max(0, d.y1 - d.y0 - 1) + "px")
+                            .text((d) => d.data.name);
+                    });
+                });
+            </script>
+            <div id="tooltip" class="hidden">
+                <p><strong>Genre</strong></p>
+                <p><span id="value">100</span>%</p>
+            </div>
+
+
+        </div>
+        <div class="row content">
+            <div class="col-sm-8 text-left">
+                <form>
+                    <input type="radio" name="mode" value="male" checked> Male</label>
+                    <label><input type="radio" name="mode" value="female"> Female</label>
+                    <label><input type="radio" name="mode" value="white"> Whites</label>
+                    <label><input type="radio" name="mode" value="minority"> Minority </label>
+                </form>
+            </div>
+        </div>
+</body>
+
+</html>
